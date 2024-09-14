@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Frida的一些脚本 
+      
+      
+      |
+    
+     Hexo
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Cxxsheng</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Frida的一些脚本</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2024-09-13 23:14:47
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Android/" title="Android">
+                    #Android
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E9%80%86%E5%90%91/" title="逆向">
+                    #逆向
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Hook/" title="Hook">
+                    #Hook
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>这篇只是记录，方便逆向的时候直接开启CV工程。</p>
+<h3 id="脚本框架"><a href="#脚本框架" class="headerlink" title="脚本框架"></a>脚本框架</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1.js</span></span><br><span class="line"><span class="title class_">Java</span>.<span class="title function_">perform</span>(<span class="keyword">function</span> (<span class="params"></span>)&#123;</span><br><span class="line">   <span class="comment">//加下面的组件 </span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> frida, sys</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">on_message</span>(<span class="params">message, data</span>):      <span class="comment"># 该函数可在frida中使用send(a); 输出python类型内容</span></span><br><span class="line">    <span class="keyword">if</span> message[<span class="string">&#x27;type&#x27;</span>] == <span class="string">&#x27;send&#x27;</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;[*] &#123;0&#125;&quot;</span>.<span class="built_in">format</span>(message[<span class="string">&#x27;payload&#x27;</span>]))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(message)</span><br><span class="line"><span class="comment"># java的代码</span></span><br><span class="line"><span class="comment"># package com.sdfglb.forjack;</span></span><br><span class="line"><span class="comment"># public class NativeLib &#123;</span></span><br><span class="line"><span class="comment">#   public native String forJackMore(String str, HashMap&lt;String, String&gt; hashMap);</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&quot;1.js&quot;</span>,<span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">jscode = f.read().decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">device = frida.get_usb_device()</span><br><span class="line">pid = device.spawn(<span class="string">&quot;com.baidu.app.xx71&quot;</span>)</span><br><span class="line">process = device.attach(pid)</span><br><span class="line">script = process.create_script(jscode)</span><br><span class="line">script.load()</span><br><span class="line">device.resume(pid)</span><br><span class="line">sys.stdin.read()</span><br></pre></td></tr></table></figure>
+
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><table>
+<thead>
+<tr>
+<th>Java Type （Java中参数类型）</th>
+<th>Frida Type （frida脚本中参数类型）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>int</td>
+<td>int</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>short</td>
+</tr>
+<tr>
+<td>long</td>
+<td>long</td>
+</tr>
+<tr>
+<td>float</td>
+<td>float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>double</td>
+</tr>
+<tr>
+<td>char</td>
+<td>char</td>
+</tr>
+<tr>
+<td><Object>（比如String、List）</td>
+<td><package>.<Object>（比如java.lang.String、java.util.List）</td>
+</tr>
+<tr>
+<td>int[]</td>
+<td>[I</td>
+</tr>
+<tr>
+<td>byte[]</td>
+<td>[B</td>
+</tr>
+<tr>
+<td>short[]</td>
+<td>[S</td>
+</tr>
+<tr>
+<td>long[]</td>
+<td>[J</td>
+</tr>
+<tr>
+<td>float[]</td>
+<td>[F</td>
+</tr>
+<tr>
+<td>double[]</td>
+<td>[D</td>
+</tr>
+<tr>
+<td>char[]</td>
+<td>[C</td>
+</tr>
+<tr>
+<td><Object>[]（比如String[]）</td>
+<td>L<package>.<Object>; (比如 [Ljava.lang.String;)</td>
+</tr>
+</tbody></table>
+<h3 id="输出堆栈"><a href="#输出堆栈" class="headerlink" title="输出堆栈"></a>输出堆栈</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Exception</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;java.lang.Exception&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> stackTrace = <span class="title class_">Exception</span>.$new().<span class="title function_">getStackTrace</span>();</span><br><span class="line"><span class="keyword">var</span> stackTraceString = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; stackTrace.<span class="property">length</span>; i++) &#123;</span><br><span class="line">          stackTraceString += <span class="string">&#x27;\t&#x27;</span> + stackTrace[i].<span class="title function_">toString</span>() + <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(stackTraceString);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="输出Activity"><a href="#输出Activity" class="headerlink" title="输出Activity"></a>输出Activity</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Activity</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;android.app.Activity&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Activity</span>.<span class="property">onCreate</span>.<span class="title function_">overload</span>(<span class="string">&quot;android.os.Bundle&quot;</span>).<span class="property">implementation</span> = <span class="keyword">function</span>(<span class="params">savedInstanceState</span>) &#123;</span><br><span class="line">  <span class="comment">// 在这里可以添加您的 Hook 逻辑</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Activity.onCreate() is hooked!&#x27;</span>);</span><br><span class="line">  <span class="comment">// 执行原始的 onCreate() 方法</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">onCreate</span>(savedInstanceState);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="WebView-LoadUrl"><a href="#WebView-LoadUrl" class="headerlink" title="WebView LoadUrl"></a>WebView LoadUrl</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">WebView</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;android.webkit.WebView&#x27;</span>);</span><br><span class="line"><span class="title class_">WebView</span>.<span class="property">loadUrl</span>.<span class="title function_">overload</span>(<span class="string">&#x27;java.lang.String&#x27;</span>, <span class="string">&#x27;java.util.Map&#x27;</span>).<span class="property">implementation</span> = <span class="keyword">function</span>(<span class="params">url, additionalHttpHeaders</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;loadUrl called with URL: &quot;</span> + url);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Additional headers: &quot;</span> + additionalHttpHeaders);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">loadUrl</span>(url, additionalHttpHeaders);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">WebView</span>.<span class="property">loadUrl</span>.<span class="title function_">overload</span>(<span class="string">&#x27;java.lang.String&#x27;</span>).<span class="property">implementation</span> = <span class="keyword">function</span>(<span class="params">url, </span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;loadUrl called with URL: &quot;</span> + url);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">loadUrl</span>(url);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="奇怪的方法名称"><a href="#奇怪的方法名称" class="headerlink" title="奇怪的方法名称"></a>奇怪的方法名称</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//com.lt.app.WebActivity.ʻ(java.lang.String,boolean)</span></span><br><span class="line"><span class="comment">//转成utf-8</span></span><br><span class="line"><span class="title class_">WebActivity</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;com.lt.app.WebActivity&quot;</span>);</span><br><span class="line"><span class="title class_">WebActivity</span>[<span class="string">&quot;\u02BB&quot;</span>].<span class="title function_">overload</span>(<span class="string">&#x27;java.lang.String&#x27;</span>, <span class="string">&#x27;java.util.Map&#x27;</span>).<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">str, map</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`WebActivity.ʻ is called: str=<span class="subst">$&#123;str&#125;</span>, map=<span class="subst">$&#123;map&#125;</span>`</span>);</span><br><span class="line">    <span class="variable language_">this</span>[<span class="string">&quot;\u02BB&quot;</span>](str, map);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="SharedPreferences"><a href="#SharedPreferences" class="headerlink" title="SharedPreferences"></a>SharedPreferences</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hook getString() 方法</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">SharedPreferences</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;android.app.SharedPreferencesImpl&#x27;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title class_">SharedPreferences</span>.<span class="property">getString</span>.<span class="property">implementation</span> = <span class="keyword">function</span>(<span class="params">key, defValue</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;SharedPreferences.getString() is called, key:&#x27;</span>, key, <span class="string">&#x27; defValue:&#x27;</span>, defValue);</span><br><span class="line">    <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="title function_">getString</span>(key, defValue);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;SharedPreferences.getString() is returning:&#x27;</span>, value);</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// hook getString() 方法</span></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">EditorImpl</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;android.app.SharedPreferencesImpl$EditorImpl&#x27;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title class_">EditorImpl</span>.<span class="property">putString</span>.<span class="property">implementation</span> = <span class="keyword">function</span>(<span class="params">key, defValue</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;SharedPreferences.putString() is called, key:&#x27;</span>, key, <span class="string">&#x27; defValue:&#x27;</span>, defValue);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> value = <span class="variable language_">this</span>.<span class="title function_">putString</span>(key, defValue);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;SharedPreferences.putString() is returning:&#x27;</span>, value);</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// hook edit方法</span></span><br><span class="line"><span class="title class_">SharedPreferences</span>.<span class="property">edit</span>.<span class="property">implementation</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;调用 SharedPreferences.edit() 方法&#x27;</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;edit path:&#x27;</span>, <span class="variable language_">this</span>.<span class="property">mFile</span>.<span class="property">value</span>);</span><br><span class="line">    <span class="keyword">var</span> editor = <span class="variable language_">this</span>.<span class="title function_">edit</span>();</span><br><span class="line">    <span class="keyword">return</span> editor;</span><br><span class="line">&#125;; </span><br></pre></td></tr></table></figure>
+
+<h3 id="Hook-loadLibrary"><a href="#Hook-loadLibrary" class="headerlink" title="Hook loadLibrary"></a>Hook loadLibrary</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">const</span> <span class="title class_">System</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;java.lang.System&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> <span class="title class_">Runtime</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;java.lang.Runtime&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> <span class="title class_">SystemLoad</span>_2 = <span class="title class_">System</span>.<span class="property">loadLibrary</span>.<span class="title function_">overload</span>(<span class="string">&#x27;java.lang.String&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> <span class="title class_">VMStack</span> = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;dalvik.system.VMStack&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="title class_">SystemLoad</span>_2.<span class="property">implementation</span> = <span class="keyword">function</span>(<span class="params">library</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Loading dynamic library 1=&gt; &quot;</span> + library);</span><br><span class="line">            <span class="keyword">const</span> loaded = <span class="title class_">Runtime</span>.<span class="title function_">getRuntime</span>().<span class="title function_">loadLibrary0</span>(<span class="title class_">VMStack</span>.<span class="title function_">getCallingClassLoader</span>(), library);</span><br><span class="line"><span class="comment">//            console.log(&quot;Loading dynamic library2 =&gt; &quot; + library);</span></span><br><span class="line">            <span class="keyword">return</span> loaded;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span>(ex) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Hook-linker"><a href="#Hook-linker" class="headerlink" title="Hook linker"></a>Hook linker</h3><p>通过hook log函数来dump</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">hook_constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">Process</span>.<span class="property">pointerSize</span> == <span class="number">4</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> linker = <span class="title class_">Process</span>.<span class="title function_">findModuleByName</span>(<span class="string">&quot;linker&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> linker = <span class="title class_">Process</span>.<span class="title function_">findModuleByName</span>(<span class="string">&quot;linker64&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`find linker`</span>, linker.<span class="property">base</span>);</span><br><span class="line">	<span class="comment">//一、获取函数的地址</span></span><br><span class="line">    <span class="keyword">var</span> isLogOpen = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">var</span> addr_call_function =<span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">var</span> addr_g_ld_debug_verbosity = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">var</span> addr_dl__Z10linker_logiPKcz = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">//    var addr_async_safe_format_log = null;</span></span><br><span class="line">    <span class="keyword">if</span> (linker) &#123;</span><br><span class="line">        <span class="comment">//console.log(&quot;found linker&quot;);</span></span><br><span class="line">        <span class="keyword">var</span> symbols = linker.<span class="title function_">enumerateSymbols</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; symbols.<span class="property">length</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">var</span> name = symbols[i].<span class="property">name</span>;</span><br><span class="line">            <span class="keyword">if</span> (name.<span class="title function_">indexOf</span>(<span class="string">&quot;call_constructors&quot;</span>) &gt;= <span class="number">0</span>)&#123;</span><br><span class="line">                addr_call_function = symbols[i].<span class="property">address</span>;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;call_function&quot;</span>,<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(symbols[i]));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(name.<span class="title function_">indexOf</span>(<span class="string">&quot;g_ld_debug_verbosity&quot;</span>) &gt;=<span class="number">0</span>)&#123;</span><br><span class="line">                addr_g_ld_debug_verbosity = symbols[i].<span class="property">address</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(name.<span class="title function_">indexOf</span>(<span class="string">&quot;_dl__Z10linker_logiPKcz&quot;</span>) &gt;= <span class="number">0</span> &amp;&amp; name.<span class="title function_">indexOf</span>(<span class="string">&quot;va_list&quot;</span>) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                addr_dl__Z10linker_logiPKcz = symbols[i].<span class="property">address</span>;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;log&quot;</span>,<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(symbols[i]));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//二、打开log函数的等级</span></span><br><span class="line">        <span class="keyword">if</span>(addr_call_function)&#123;</span><br><span class="line">            <span class="title class_">Interceptor</span>.<span class="title function_">attach</span>(addr_call_function, &#123;</span><br><span class="line">                <span class="attr">onEnter</span>: <span class="keyword">function</span>(<span class="params">args</span>)&#123;</span><br><span class="line">                     <span class="keyword">if</span>(!isLogOpen)</span><br><span class="line">                     &#123;</span><br><span class="line">                         <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;open log&quot;</span>)</span><br><span class="line">                         <span class="title function_">ptr</span>(addr_g_ld_debug_verbosity).<span class="title function_">writeInt</span>(<span class="number">2</span>);</span><br><span class="line">                         isLogOpen = <span class="literal">true</span>;</span><br><span class="line">                     &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="attr">onLeave</span>: <span class="keyword">function</span>(<span class="params">retval</span>)&#123;</span><br><span class="line"><span class="comment">//                      console.log(&quot;close log&quot;)</span></span><br><span class="line"><span class="comment">//                      ptr(addr_g_ld_debug_verbosity).writeInt(0);</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">	    <span class="comment">//三、判断log的日志字符串情况来输出</span></span><br><span class="line">        <span class="keyword">if</span>(addr_dl__Z10linker_logiPKcz)&#123;</span><br><span class="line">            <span class="title class_">Interceptor</span>.<span class="title function_">attach</span>(<span class="params">addr_dl__Z10linker_logiPKcz, &#123;</span></span><br><span class="line"><span class="params">                onEnter: <span class="keyword">function</span>(args)&#123;</span></span><br><span class="line"><span class="params">//                        <span class="variable language_">this</span>.tag = ptr(args[<span class="number">1</span>]).readCString()</span></span><br><span class="line"><span class="params">                        <span class="variable language_">this</span>.fmt = ptr(args[<span class="number">1</span>]).readCString()</span></span><br><span class="line"><span class="params">//                                                    <span class="variable language_">console</span>.log(<span class="variable language_">this</span>.fmt);</span></span><br><span class="line"><span class="params">                        //所有的init_array func and init func</span></span><br><span class="line"><span class="params">                        <span class="keyword">if</span>(<span class="variable language_">this</span>.fmt.indexOf(<span class="string">&quot;c-tor&quot;</span>) &gt;= <span class="number">0</span> &amp;&amp; <span class="variable language_">this</span>.fmt.indexOf(<span class="string">&#x27;Done&#x27;</span>) &gt;= <span class="number">0</span>)&#123;</span></span><br><span class="line"><span class="params">                            <span class="variable language_">this</span>.func_type = ptr(args[<span class="number">2</span>]).readCString();</span></span><br><span class="line"><span class="params">                            <span class="variable language_">this</span>.so_path = ptr(args[<span class="number">4</span>]).readCString();</span></span><br><span class="line"><span class="params">                            <span class="variable language_">console</span>.log(<span class="variable language_">this</span>.so_path, <span class="variable language_">this</span>.func_type);</span></span><br><span class="line"><span class="params">                        &#125;</span></span><br><span class="line"><span class="params">                        //start init array</span></span><br><span class="line"><span class="params">                        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable language_">this</span>.fmt.indexOf(<span class="string">&quot;Calling&quot;</span>) &gt;= <span class="number">0</span> &amp;&amp; <span class="variable language_">this</span>.fmt.indexOf(<span class="string">&quot;%zd)&quot;</span>) &gt;= <span class="number">0</span>)&#123;</span></span><br><span class="line"><span class="params">                            <span class="variable language_">this</span>.func_type = ptr(args[<span class="number">2</span>]).readCString();</span></span><br><span class="line"><span class="params">                            <span class="variable language_">this</span>.count = (args[<span class="number">3</span>]).toInt32();</span></span><br><span class="line"><span class="params">                            <span class="variable language_">console</span>.log(<span class="variable language_">this</span>.func_type,<span class="string">&quot;started size &quot;</span> , <span class="variable language_">this</span>.count);</span></span><br><span class="line"><span class="params">                        &#125;</span></span><br><span class="line"><span class="params">						// init_array结束</span></span><br><span class="line"><span class="params">                        <span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable language_">this</span>.fmt.indexOf(<span class="string">&quot;Done calling %s for &#x27;%s&#x27;&quot;</span>) &gt;= <span class="number">0</span>)&#123;</span></span><br><span class="line"><span class="params">                            <span class="variable language_">this</span>.func_type = ptr(args[<span class="number">2</span>]).readCString();</span></span><br><span class="line"><span class="params">                            <span class="variable language_">console</span>.log(<span class="variable language_">this</span>.func_type, <span class="string">&quot;finished&quot;</span>);</span></span><br><span class="line"><span class="params">                        &#125;</span></span><br><span class="line"><span class="params">                &#125;,</span></span><br><span class="line"><span class="params">                onLeave: <span class="keyword">function</span>(retval)&#123;&#125;</span></span><br><span class="line"><span class="params">            &#125;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dump-so"><a href="#Dump-so" class="headerlink" title="Dump so"></a>Dump so</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//dump code</span></span><br><span class="line"><span class="keyword">var</span> libbaiduprotect = <span class="title class_">Process</span>.<span class="title function_">findModuleByName</span>(<span class="string">&quot;libbaiduprotect.so&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(libbaiduprotect.<span class="property">base</span>, libbaiduprotect.<span class="property">size</span>);</span><br><span class="line"><span class="title class_">Memory</span>.<span class="title function_">protect</span>(<span class="title function_">ptr</span>(libbaiduprotect.<span class="property">base</span>), libbaiduprotect.<span class="property">size</span>, <span class="string">&#x27;rwx&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> dumpFilePath = <span class="string">&quot;/data/data/com.moutai.mall/files/dump.so&quot;</span>; <span class="comment">// 替换为保存.so文件转储数据的文件路径</span></span><br><span class="line"><span class="keyword">var</span> dumpFile = <span class="keyword">new</span> <span class="title class_">File</span>(dumpFilePath, <span class="string">&quot;wb&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> soData = <span class="title class_">Memory</span>.<span class="title function_">readByteArray</span>(libbaiduprotect.<span class="property">base</span>, libbaiduprotect.<span class="property">size</span>);</span><br><span class="line">dumpFile.<span class="title function_">write</span>(soData);</span><br><span class="line">dumpFile.<span class="title function_">flush</span>();</span><br><span class="line">dumpFile.<span class="title function_">close</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>((libbaiduprotect.<span class="property">base</span>.<span class="title function_">add</span>(<span class="number">0xE155C</span>)))</span><br></pre></td></tr></table></figure>
+
+<h3 id="通过主动调用来解密字符串（baidujiagu）"><a href="#通过主动调用来解密字符串（baidujiagu）" class="headerlink" title="通过主动调用来解密字符串（baidujiagu）"></a>通过主动调用来解密字符串（baidujiagu）</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> decodelist = [</span><br><span class="line"><span class="string">&quot;1F9A8***0F892D685939526D&quot;</span>,</span><br><span class="line"><span class="string">&quot;1FA88***4F25DC8975A33B550346DE887FA531521346FE887FA531441352F18D70A735130B08D3803E82204E0E07DADC5DBB354A0646D1867FB67B6F131BD48976EA1856061FDCC87DB03A5B483AC99578BF33072E40EB&quot;</span>,</span><br><span class="line"><span class="string">&quot;1FB68***CAD6059A10DC32C3&quot;</span>,</span><br><span class="line"><span class="string">&quot;1FC48***29B16CA41B46FCCE65D26EA51140F6C975D24EA51140F6DF75C6249C&quot;</span>,</span><br><span class="line"><span class="string">&quot;1FD28***2E0C218B92E17D7E&quot;</span>,</span><br><span class="line"><span class="string">&quot;1FE08***4C21048D5373F3960042068C5975F9911042268C5975F98710564CB5&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i <span class="keyword">in</span> decodelist)&#123;</span><br><span class="line">    <span class="keyword">var</span> str = decodelist[i].<span class="title function_">substring</span>(<span class="number">8</span>)</span><br><span class="line">    <span class="keyword">var</span> funcaddr = <span class="built_in">parseInt</span>(decodelist[i].<span class="title function_">substring</span>(<span class="number">0</span>, <span class="number">5</span>), <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> n_addr_so = <span class="title class_">Module</span>.<span class="title function_">findBaseAddress</span>(<span class="string">&quot;libbaiduprotect.so&quot;</span>);</span><br><span class="line">    <span class="keyword">var</span> n_funcaddr = funcaddr + <span class="built_in">parseInt</span>(n_addr_so, <span class="number">16</span>);</span><br><span class="line">    <span class="keyword">var</span> call_func = <span class="keyword">new</span> <span class="title class_">NativeFunction</span>(<span class="title function_">ptr</span>(n_funcaddr), <span class="string">&#x27;pointer&#x27;</span>, [<span class="string">&#x27;pointer&#x27;</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> str_arg = <span class="title class_">Memory</span>.<span class="title function_">allocUtf8String</span>(str);</span><br><span class="line">    <span class="keyword">var</span> p_str_ret = <span class="title function_">call_func</span>(str_arg);</span><br><span class="line">    <span class="keyword">var</span> str_ret = <span class="title class_">Memory</span>.<span class="title function_">readCString</span>(p_str_ret);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(str_ret)</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="调用RegisterNatives"><a href="#调用RegisterNatives" class="headerlink" title="调用RegisterNatives"></a>调用RegisterNatives</h3><p>因为存在两个RegisterNatives，所以需不需要取决于实际情况</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">hook_RegisterNatives</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> symbols = <span class="title class_">Module</span>.<span class="title function_">enumerateSymbolsSync</span>(<span class="string">&quot;libart.so&quot;</span>);</span><br><span class="line">    <span class="keyword">var</span> addrRegisterNatives = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; symbols.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">var</span> symbol = symbols[i];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//_ZN3art3JNI15RegisterNativesEP7_JNIEnvP7_jclassPK15JNINativeMethodi</span></span><br><span class="line">        <span class="keyword">if</span> (symbol.<span class="property">name</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;art&quot;</span>) &gt;= <span class="number">0</span> &amp;&amp;</span><br><span class="line">                symbol.<span class="property">name</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;JNI&quot;</span>) &gt;= <span class="number">0</span> &amp;&amp;</span><br><span class="line">                symbol.<span class="property">name</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;RegisterNatives&quot;</span>) &gt;= <span class="number">0</span> &amp;&amp;</span><br><span class="line">                symbol.<span class="property">name</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;CheckJNI&quot;</span>) &lt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">                symbol.<span class="property">name</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;URegisterNatives&quot;</span>)) &#123;</span><br><span class="line">            addrRegisterNatives = symbol.<span class="property">address</span>;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;RegisterNatives is at &quot;</span>, symbol.<span class="property">address</span>, symbol.<span class="property">name</span>);</span><br><span class="line">            <span class="comment">//注意点，这个break是不是需要取决于实际情况</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (addrRegisterNatives != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="title class_">Interceptor</span>.<span class="title function_">attach</span>(addrRegisterNatives, &#123;</span><br><span class="line">            <span class="attr">onEnter</span>: <span class="keyword">function</span> (<span class="params">args</span>) &#123;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;[RegisterNatives] method_count:&quot;</span>, args[<span class="number">3</span>]);</span><br><span class="line">                <span class="keyword">var</span> env = args[<span class="number">0</span>];</span><br><span class="line">                <span class="keyword">var</span> java_class = args[<span class="number">1</span>];</span><br><span class="line">                <span class="keyword">var</span> class_name = <span class="title class_">Java</span>.<span class="property">vm</span>.<span class="title function_">tryGetEnv</span>().<span class="title function_">getClassName</span>(java_class);</span><br><span class="line">                <span class="comment">//console.log(class_name);</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">var</span> methods_ptr = <span class="title function_">ptr</span>(args[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">var</span> method_count = <span class="built_in">parseInt</span>(args[<span class="number">3</span>]);</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; method_count; i++) &#123;</span><br><span class="line">                    <span class="keyword">var</span> name_ptr = <span class="title class_">Memory</span>.<span class="title function_">readPointer</span>(methods_ptr.<span class="title function_">add</span>(i * <span class="title class_">Process</span>.<span class="property">pointerSize</span> * <span class="number">3</span>));</span><br><span class="line">                    <span class="keyword">var</span> sig_ptr = <span class="title class_">Memory</span>.<span class="title function_">readPointer</span>(methods_ptr.<span class="title function_">add</span>(i * <span class="title class_">Process</span>.<span class="property">pointerSize</span> * <span class="number">3</span> + <span class="title class_">Process</span>.<span class="property">pointerSize</span>));</span><br><span class="line">                    <span class="keyword">var</span> fnPtr_ptr = <span class="title class_">Memory</span>.<span class="title function_">readPointer</span>(methods_ptr.<span class="title function_">add</span>(i * <span class="title class_">Process</span>.<span class="property">pointerSize</span> * <span class="number">3</span> + <span class="title class_">Process</span>.<span class="property">pointerSize</span> * <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">var</span> name = <span class="title class_">Memory</span>.<span class="title function_">readCString</span>(name_ptr);</span><br><span class="line">                    <span class="keyword">var</span> sig = <span class="title class_">Memory</span>.<span class="title function_">readCString</span>(sig_ptr);</span><br><span class="line">                    <span class="keyword">var</span> find_module = <span class="title class_">Process</span>.<span class="title function_">findModuleByAddress</span>(fnPtr_ptr);</span><br><span class="line">                    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;[RegisterNatives] java_class:&quot;</span>, class_name, <span class="string">&quot;name:&quot;</span>, name, <span class="string">&quot;sig:&quot;</span>, sig, <span class="string">&quot;fnPtr:&quot;</span>, fnPtr_ptr, <span class="string">&quot;module_name:&quot;</span>, find_module.<span class="property">name</span>, <span class="string">&quot;module_base:&quot;</span>, find_module.<span class="property">base</span>, <span class="string">&quot;offset:&quot;</span>, <span class="title function_">ptr</span>(fnPtr_ptr).<span class="title function_">sub</span>(find_module.<span class="property">base</span>));</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="输出数组"><a href="#输出数组" class="headerlink" title="输出数组"></a>输出数组</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arrays = <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;java.util.Arrays&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;sortResults : &#x27;</span> + arrays.<span class="title function_">toString</span>(results.<span class="title function_">toArray</span>()));</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/09/13/hash%E9%AD%94%E6%95%B0%E7%9A%84%E5%A5%87%E5%A6%99%E4%B9%8B%E6%97%85/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2024-09-13 23:14:47
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Android/" title="Android">
+                        #Android
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E9%80%86%E5%90%91/" title="逆向">
+                        #逆向
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Hook/" title="Hook">
+                        #Hook
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E6%A1%86%E6%9E%B6"><span class="toc-text">脚本框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B"><span class="toc-text">类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E5%A0%86%E6%A0%88"><span class="toc-text">输出堆栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BAActivity"><span class="toc-text">输出Activity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebView-LoadUrl"><span class="toc-text">WebView LoadUrl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%87%E6%80%AA%E7%9A%84%E6%96%B9%E6%B3%95%E5%90%8D%E7%A7%B0"><span class="toc-text">奇怪的方法名称</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SharedPreferences"><span class="toc-text">SharedPreferences</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hook-loadLibrary"><span class="toc-text">Hook loadLibrary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hook-linker"><span class="toc-text">Hook linker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dump-so"><span class="toc-text">Dump so</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E4%B8%BB%E5%8A%A8%E8%B0%83%E7%94%A8%E6%9D%A5%E8%A7%A3%E5%AF%86%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%88baidujiagu%EF%BC%89"><span class="toc-text">通过主动调用来解密字符串（baidujiagu）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8RegisterNatives"><span class="toc-text">调用RegisterNatives</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E6%95%B0%E7%BB%84"><span class="toc-text">输出数组</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2024 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Frida%E7%9A%84%E4%B8%80%E4%BA%9B%E8%84%9A%E6%9C%AC + '&url=' + http%3A%2F%2Fexample.com%2F2024%2F09%2F13%2FFrida%25E7%259A%2584%25E4%25B8%2580%25E4%25BA%259B%25E8%2584%259A%25E6%259C%25AC%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2024/09/13/Frida%E7%9A%84%E4%B8%80%E4%BA%9B%E8%84%9A%E6%9C%AC/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

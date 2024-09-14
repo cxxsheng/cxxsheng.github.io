@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Hash魔数的奇妙之旅 
+      
+      
+      |
+    
+     Hexo
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Cxxsheng</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Hash魔数的奇妙之旅</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2024-09-13 22:58:54
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Linux-Kernel/" title="Linux Kernel">
+                    #Linux Kernel
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Hash/" title="Hash">
+                    #Hash
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="一、起因"><a href="#一、起因" class="headerlink" title="一、起因"></a>一、起因</h3><p>在看《深入理解linux内核》有关hash函数部分时候，发现了一个有趣的魔数<strong>0x9e370001UL</strong>。书中对于该数的解释如下：</p>
+<blockquote>
+<p> 也许你会想常量0x9e370001(&#x3D;2654 404 609)究竟是怎么得出的。这种散列函数是基于表索引乘以一个适当的大数，于是结果溢出，就把留在32位变量中的值作为模数操作的结果。Knuth建议，要得到满意的结果，这个大柬数就应当是接近黄金比例的2”的一个素数（32位是80x86寄存器的大小）。这里，2654 404 609就是接近$ 2^{32}×(\sqrt{5}-1)&#x2F;2 $的一个素数，这个数可以方便地通过加运算和位移运算得到，因为它等于∶ $2^{31}+2^{29}-2^{25}+2^{22}-2^{19}-2^{16}+1$。 </p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">long</span> <span class="title function_">hash_long</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> val,<span class="type">unsigned</span> <span class="type">int</span> bits)</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">unsigned</span> <span class="type">long</span> hash = val* <span class="number">0</span>×<span class="number">9e370001</span>UL;</span><br><span class="line">        <span class="keyword">return</span> hash S &gt;&gt; (<span class="number">32</span>-bits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>于是乎，我去翻找了对应的源代码文件<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source">&#x2F;</a><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/include">include</a>&#x2F;<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/include/linux">linux</a>&#x2F;<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/include/linux/hash.h">hash.h</a>，发现了有趣的地方，这个魔数在最新版本的kernel中并不存在，取而代之的是<strong>0x61C88647</strong>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> GOLDEN_RATIO_32 0x61C88647</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GOLDEN_RATIO_64 0x61C8864680B583EBull</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_HAVE_ARCH_HASH</span></span><br><span class="line"><span class="comment">/* This header may use the GOLDEN_RATIO_xx constants */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;asm/hash.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * The _generic versions exist only so lib/test_hash.c can compare</span></span><br><span class="line"><span class="comment"> * the arch-optimized versions with the generic.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Note that if you change these, any &lt;asm/hash.h&gt; that aren&#x27;t updated</span></span><br><span class="line"><span class="comment"> * to match need to have their HAVE_ARCH_* define values updated so the</span></span><br><span class="line"><span class="comment"> * self-test will not false-positive.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HAVE_ARCH__HASH_32</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __hash_32 __hash_32_generic</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> u32 __hash_32_generic(u32 val)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> val * GOLDEN_RATIO_32;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> u32 <span class="title function_">hash_32</span><span class="params">(u32 val, <span class="type">unsigned</span> <span class="type">int</span> bits)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">/* High bits are more random, so use them. */</span></span><br><span class="line">	<span class="keyword">return</span> __hash_32(val) &gt;&gt; (<span class="number">32</span> - bits);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HAVE_ARCH_HASH_64</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> hash_64 hash_64_generic</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="type">static</span> __always_inline u32 <span class="title function_">hash_64_generic</span><span class="params">(u64 val, <span class="type">unsigned</span> <span class="type">int</span> bits)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> BITS_PER_LONG == 64</span></span><br><span class="line">	<span class="comment">/* 64x64-bit multiply is efficient on all 64-bit processors */</span></span><br><span class="line">	<span class="keyword">return</span> val * GOLDEN_RATIO_64 &gt;&gt; (<span class="number">64</span> - bits);</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	<span class="comment">/* Hash 64 bits using only 32x32-bit multiply. */</span></span><br><span class="line">	<span class="keyword">return</span> hash_32((u32)val ^ __hash_32(val &gt;&gt; <span class="number">32</span>), bits);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么会出现这个问题呢？我们找到了<a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/include/linux/hash.h">hash.h的修改日志</a>，发现了2016-05-02的一条修改记录引人注目。</p>
+<p><img src="/images/Hash.png" alt="image-20230216134352171"></p>
+<table>
+<thead>
+<tr>
+<th align="center">变量名</th>
+<th align="center">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GOLDEN_RATIO_PRIME_32</td>
+<td align="center">0x9e370001</td>
+</tr>
+<tr>
+<td align="center">GOLDEN_RATIO_PRIME_64</td>
+<td align="center">0x9e37fffffffc0001B</td>
+</tr>
+<tr>
+<td align="center">GOLDEN_RATIO_32</td>
+<td align="center">0x61C88647</td>
+</tr>
+<tr>
+<td align="center">GOLDEN_RATIO_64</td>
+<td align="center">0x61C8864680B583EB</td>
+</tr>
+</tbody></table>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>这次<a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/include/linux/hash.h?id=689de1d6ca95b3b5bd8ee446863bf81a4883ea25">patch</a>往hash文件中增加了新的魔数<strong>0x61C88647</strong>，但是并没有删除原来的魔数（为了兼容性和效率）。其中注释说到的理由可以概括为两点：</p>
+<ol>
+<li>上方的质数（<strong>0x9e370001</strong>与<strong>0x9e37fffffffc0001</strong>）过于稀疏（sparse），对64位hash函数影响显著。  </li>
+<li>是否是质数对于乘法hash并没有影响。</li>
+</ol>
+<p>因此，原来的最接近黄金分割的素数<strong>0x9e370001</strong>被替换成最接近黄金分割的奇数<strong>0x61C88647</strong>。</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git a/include/linux/hash.h b/include/linux/hash.h</span></span><br><span class="line"><span class="comment">index 1afde47e1528c..79c52fa81cac9 100644</span></span><br><span class="line"><span class="comment">--- a/include/linux/hash.h</span></span><br><span class="line"><span class="comment">+++ b/include/linux/hash.h</span></span><br><span class="line"><span class="meta">@@ -32,12 +32,28 @@</span></span><br><span class="line"> #error Wordsize not 32 or 64</span><br><span class="line"> #endif</span><br><span class="line"> </span><br><span class="line"><span class="addition">+/*</span></span><br><span class="line"><span class="addition">+ * The above primes are actively bad for hashing, since they are</span></span><br><span class="line"><span class="addition">+ * too sparse. The 32-bit one is mostly ok, the 64-bit one causes</span></span><br><span class="line"><span class="addition">+ * real problems. Besides, the &quot;prime&quot; part is pointless for the</span></span><br><span class="line"><span class="addition">+ * multiplicative hash.</span></span><br><span class="line"><span class="addition">+ *</span></span><br><span class="line"><span class="addition">+ * Although a random odd number will do, it turns out that the golden</span></span><br><span class="line"><span class="addition">+ * ratio phi = (sqrt(5)-1)/2, or its negative, has particularly nice</span></span><br><span class="line"><span class="addition">+ * properties.</span></span><br><span class="line"><span class="addition">+ *</span></span><br><span class="line"><span class="addition">+ * These are the negative, (1 - phi) = (phi^2) = (3 - sqrt(5))/2.</span></span><br><span class="line"><span class="addition">+ * (See Knuth vol 3, section 6.4, exercise 9.)</span></span><br><span class="line"><span class="addition">+ */</span></span><br><span class="line"><span class="addition">+#define GOLDEN_RATIO_32 0x61C88647</span></span><br><span class="line"><span class="addition">+#define GOLDEN_RATIO_64 0x61C8864680B583EBull</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"> static __always_inline u64 hash_64(u64 val, unsigned int bits)</span><br><span class="line"> &#123;</span><br><span class="line"> 	u64 hash = val;</span><br><span class="line"> </span><br><span class="line"><span class="deletion">-#if defined(CONFIG_ARCH_HAS_FAST_MULTIPLIER) &amp;&amp; BITS_PER_LONG == 64</span></span><br><span class="line"><span class="deletion">-	hash = hash * GOLDEN_RATIO_PRIME_64;</span></span><br><span class="line"><span class="addition">+#if BITS_PER_LONG == 64</span></span><br><span class="line"><span class="addition">+	hash = hash * GOLDEN_RATIO_64;</span></span><br><span class="line"> #else</span><br><span class="line"> 	/*  Sigh, gcc can&#x27;t optimise this alone like it does for 32 bits. */</span><br><span class="line"> 	u64 n = hash;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这两个原因可能让人不太理解，下面我们来详细讲一下两个原因：</p>
+<h4 id="2-1-稀疏"><a href="#2-1-稀疏" class="headerlink" title="2.1 稀疏"></a>2.1 稀疏</h4><p>之前讲过，乘法hash是将key乘以一个适当的大数，于是结果溢出，保留一些高位的值得到一个相对的伪随机数。这里我们需要考虑两个因素：一个是随机性，我们希望能够得到一个相对随机性较大的结果；另外我们还需要考虑效率问题，因为大数乘法的效率比较低。早前选取了一个位稀疏（bit sparse）的大质数<strong>0x9e370001</strong>，这个数可以表示为 $2^{31}+2^{29}-2^{25}+2^{22}-2^{19}-2^{16}+1$。因此，编译器在优化乘法的时候会将其优化成位操作与加法，64位下也是同理。<strong>0x61C8864680B583EB</strong>可以表示为$  2^{63} + 2^{61} - 2^{57} + 2^{54} - 2^{51} - 2^{18} + 1 $。可以看到位稀疏的大数在乘法的时候，可以通过位操作完成大数乘法，如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> __always_inline u64 <span class="title function_">hash_64</span><span class="params">(u64 val, <span class="type">unsigned</span> <span class="type">int</span> bits)</span></span><br><span class="line">&#123;</span><br><span class="line">	...</span><br><span class="line">	<span class="comment">/*  Sigh, gcc can&#x27;t optimise this alone like it does for 32 bits. */</span></span><br><span class="line">	u64 n = hash;</span><br><span class="line">	n &lt;&lt;= <span class="number">18</span>;</span><br><span class="line">	hash -= n;</span><br><span class="line">	n &lt;&lt;= <span class="number">33</span>;</span><br><span class="line">	hash -= n;</span><br><span class="line">	n &lt;&lt;= <span class="number">3</span>;</span><br><span class="line">	hash += n;</span><br><span class="line">	n &lt;&lt;= <span class="number">3</span>;</span><br><span class="line">	hash -= n;</span><br><span class="line">	n &lt;&lt;= <span class="number">4</span>;</span><br><span class="line">	hash += n;</span><br><span class="line">	n &lt;&lt;= <span class="number">2</span>;</span><br><span class="line">	hash += n;</span><br><span class="line">	...</span><br><span class="line">	<span class="comment">/* High bits are more random, so use them. */</span></span><br><span class="line">	<span class="keyword">return</span> hash &gt;&gt; (<span class="number">64</span> - bits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，位越稀疏的大数，所消耗的开销会越低，但是这也会带来一些问题。在32位下，这些问题并不显著；而在64位下，这会带来一些灾难性的问题。我们将一个等待hash的数设为$n$，则$ n[64] &#x3D; {n[63]n[62]…n[0]} $,其中$O$负责将数组补全到64位，则上述的步骤就会变成以下步骤：</p>
+<ol>
+<li>$ out &#x3D; n[64] $</li>
+<li>$ out -&#x3D; {n[45]n[41]….n[0]O}$ &#x2F;&#x2F; 左移18位后</li>
+<li>$$out -&#x3D; {n[12]n[11]….n[0]O}$  &#x2F;&#x2F; 左移33位后</li>
+<li>$out +&#x3D; {n[9]n[8]….n[0]O}$  &#x2F;&#x2F; 左移3位后</li>
+<li>$ out +&#x3D; {n[6]n[5]….n[0]O}$ &#x2F;&#x2F; 左移3位后</li>
+<li>$ out -&#x3D;{n[2]n[1]n[0]O}$ &#x2F;&#x2F; 左移4位后</li>
+<li>$out +&#x3D; {n[0]O}$ &#x2F;&#x2F; 左移2位后</li>
+</ol>
+<p>这个稀疏的数存在的问题便是，高位的一些数对于out结果的决定性较小，而低位的一些数对于out结果的决定性较大，这会带来什么问题呢？我们知道，计算机中往往存在一些对齐的地址（比如页对齐等）。例如一个值0xf10000，这个数的低12位都为0，这会导致上方步骤中的第3至第7步的右侧结果都为0，而高位0xf1承载了更多的信息的比重反而十分低了。这会让hash函数的碰撞率升高。我引入以下测试代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GOLDEN_RATIO_PRIME 0x9e37fffffffc0001UL</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">uint64_t</span> <span class="title">hash_64</span><span class="params">(<span class="type">uint64_t</span>  val, <span class="type">unsigned</span> <span class="type">int</span> bits)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">uint64_t</span> hash = val;</span><br><span class="line">    hash = hash * GOLDEN_RATIO_PRIME;</span><br><span class="line">    <span class="keyword">return</span> hash &gt;&gt; (<span class="number">64</span> - bits);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BIT 32</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">uint64_t</span> arrays[] = &#123;<span class="number">0xf10000UL</span>,<span class="number">0xf20000UL</span>,<span class="number">0xf30000UL</span>,<span class="number">0xf40000UL</span>,<span class="number">0xfe0000UL</span>, <span class="number">0xff0000UL</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">sizeof</span>(arrays)/<span class="built_in">sizeof</span>(<span class="type">uint64_t</span>); ++i) &#123;</span><br><span class="line">            <span class="type">uint64_t</span> hash = <span class="built_in">hash_64</span>(arrays[i], BIT);</span><br><span class="line">            cout &lt;&lt; hex &lt;&lt; <span class="string">&quot;0x&quot;</span> &lt;&lt; hash &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0xfffffc3c</span><br><span class="line">0xfffffc38</span><br><span class="line">0xfffffc34</span><br><span class="line">0xfffffc30</span><br><span class="line">0xfffffc08</span><br><span class="line">0xfffffc04</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，当hash长度设置为32位时，这一串基址的hash结果非常接近，而当我们把BIT设置更短时，例如28，就会产生碰撞：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0xfffffc3</span><br><span class="line">0xfffffc3</span><br><span class="line">0xfffffc3</span><br><span class="line">0xfffffc3</span><br><span class="line">0xfffffc0</span><br><span class="line">0xfffffc0</span><br></pre></td></tr></table></figure>
+
+<p>而将GOLDEN_RATIO_PRIME设为0x61C8864680B583EB则不存在这个问题，同样的输入，同样BIT为28，结果会更加离散：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0x685f2ae</span><br><span class="line">0xeea5ab9</span><br><span class="line">0x74ec2c4</span><br><span class="line">0xfb32ad0</span><br><span class="line">0x39f3b41</span><br><span class="line">0xc03a34c</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-质数"><a href="#2-2-质数" class="headerlink" title="2.2 质数"></a>2.2 质数</h4><p>那么为什么把质数替换成非质数呢？我从《Vol,3 SortingAndSearching-Donald Knuth （计算机程序设计艺术（第三卷））》中找到了一些答案。该书的6.4节中提到，有两大散列函数十分友好。一是以除法为基础，而另一是以乘法为基础。除法如下：</p>
+<p>$$h(k)&#x3D;K\mod M$$</p>
+<p>此时$M$应当选择为一个大质数。而乘法并没有要求数为质数，早期的开发者可能混淆了这个概念。具体情况可以去翻一下这本书。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一个数的变化Linux都会斟酌很久，反复改进，应该学习这种精神，也算是学到不少知识。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/09/13/AFLFast%E7%AC%94%E8%AE%B0/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2024-09-13 22:58:54
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Linux-Kernel/" title="Linux Kernel">
+                        #Linux Kernel
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Hash/" title="Hash">
+                        #Hash
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/09/13/Frida%E7%9A%84%E4%B8%80%E4%BA%9B%E8%84%9A%E6%9C%AC/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%B5%B7%E5%9B%A0"><span class="toc-text">一、起因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%88%86%E6%9E%90"><span class="toc-text">二、分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E7%A8%80%E7%96%8F"><span class="toc-text">2.1 稀疏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E8%B4%A8%E6%95%B0"><span class="toc-text">2.2 质数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2024 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Hash%E9%AD%94%E6%95%B0%E7%9A%84%E5%A5%87%E5%A6%99%E4%B9%8B%E6%97%85 + '&url=' + http%3A%2F%2Fexample.com%2F2024%2F09%2F13%2Fhash%25E9%25AD%2594%25E6%2595%25B0%25E7%259A%2584%25E5%25A5%2587%25E5%25A6%2599%25E4%25B9%258B%25E6%2597%2585%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2024/09/13/hash%E9%AD%94%E6%95%B0%E7%9A%84%E5%A5%87%E5%A6%99%E4%B9%8B%E6%97%85/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
