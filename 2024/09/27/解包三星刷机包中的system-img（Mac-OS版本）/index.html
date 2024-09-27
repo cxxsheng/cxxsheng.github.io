@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      解包三星刷机包中的system.img（Mac OS版本） 
+      
+      
+      |
+    
+     Hexo
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Cxxsheng</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">解包三星刷机包中的system.img（Mac OS版本）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2024-09-27 18:05:04
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Android/" title="Android">
+                    #Android
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Firmware/" title="Firmware">
+                    #Firmware
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h3 id="1-解压"><a href="#1-解压" class="headerlink" title="1. 解压"></a>1. 解压</h3><p>从<a target="_blank" rel="noopener" href="https://samfw.com/">Samfw.com</a>下载的是一个zip，以<code>SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac.zip</code>为例，直接解压能出现以下几个文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % ls -l</span><br><span class="line">total 9054208</span><br><span class="line">-rwx------@ 1 cxxsheng  staff  4509010126 Sep 20  2023 AP_A217FZHSADWI1_CL24202344_QB71112077_REV00_user_low_ship_MULTI_CERT_meta_RKEY_OS12.tar.md5</span><br><span class="line">-rwx------@ 1 cxxsheng  staff     5376188 Sep 20  2023 BL_A217FZHSADWI1_CL24202344_QB71112077_REV00_user_low_ship_MULTI_CERT.tar.md5</span><br><span class="line">-rwx------@ 1 cxxsheng  staff    27330760 Sep 20  2023 CP_A217FXXSADWI1_CP24943611_CL24202344_QB70902586_REV00_user_low_ship_MULTI_CERT.tar.md5</span><br><span class="line">-rwx------@ 1 cxxsheng  staff    46069954 Sep 20  2023 CSC_OZS_A217FOZSADWI1_CL24202344_QB71112077_REV00_user_low_ship_MULTI_CERT.tar.md5</span><br><span class="line">-rwx------@ 1 cxxsheng  staff    46059719 Sep 20  2023 HOME_CSC_OZS_A217FOZSADWI1_CL24202344_QB71112077_REV00_user_low_ship_MULTI_CERT.tar.md5</span><br><span class="line">-rwx------@ 1 cxxsheng  staff         719 Feb  7  2022 _FirmwareInfo_Samfw.com.txt</span><br><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % </span><br></pre></td></tr></table></figure>
+
+<p>继续解压<code>AP_A217FZHSADWI1_CL24202344_QB71112077_REV00_user_low_ship_MULTI_CERT_meta_RKEY_OS12.tar.md5</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % tar -xvf AP_A217FZHSADWI1_CL24202344_QB71112077_REV00_user_low_ship_MULTI_CERT_meta_RKEY_OS12.tar.md5</span><br><span class="line">x boot.img.lz4</span><br><span class="line">x recovery.img.lz4</span><br><span class="line">x dtbo.img.lz4</span><br><span class="line">x super.img.lz4</span><br><span class="line">x userdata.img.lz4</span><br><span class="line">x misc.bin.lz4</span><br><span class="line">x vbmeta.img.lz4</span><br><span class="line">x metadata.img.lz4</span><br><span class="line">x vbmeta_samsung.img.lz4</span><br><span class="line">x meta-data/</span><br><span class="line">x meta-data/fota.zip</span><br></pre></td></tr></table></figure>
+
+<p>继续解压<code>super.img.lz4</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % 7z x super.img.lz4</span><br><span class="line"></span><br><span class="line">7-Zip [64] 17.05 : Copyright (c) 1999-2021 Igor Pavlov : 2017-08-28</span><br><span class="line">p7zip Version 17.05 (locale=utf8,Utf16=on,HugeFiles=on,64 bits,8 CPUs x64)</span><br><span class="line"></span><br><span class="line">Scanning the drive for archives:</span><br><span class="line">1 file, 3273506624 bytes (3122 MiB)</span><br><span class="line"></span><br><span class="line">Extracting archive: super.img.lz4</span><br><span class="line">--</span><br><span class="line">Path = super.img.lz4</span><br><span class="line">Type = lz4</span><br><span class="line"></span><br><span class="line">Everything is Ok</span><br><span class="line"></span><br><span class="line">Size:       5351957720</span><br><span class="line">Compressed: 3273506624</span><br></pre></td></tr></table></figure>
+
+<p>最后得出来了一个<code>super.img</code></p>
+<h3 id="2-解包super-img"><a href="#2-解包super-img" class="headerlink" title="2. 解包super.img"></a>2. 解包super.img</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % file super.img</span><br><span class="line">super.img: Android sparse image, version: 1.0, Total of 1356800 4096-byte output blocks in 101 input chunks.</span><br><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % </span><br></pre></td></tr></table></figure>
+
+<p>这里需要使用<code>lpunpack.py</code>来解包<code>super.img</code>，可以从GitHub上直接<a target="_blank" rel="noopener" href="https://github.com/unix3dgforce/lpunpack">下载</a>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % lpunpack.py super.img out/</span><br><span class="line">Sparse image detected.</span><br><span class="line">Process conversion to non sparse image ....[ok]</span><br><span class="line">Extracting partition [system] .... [ok]</span><br><span class="line">Extracting partition [vendor] .... [ok]</span><br><span class="line">Extracting partition [product] .... [ok]</span><br><span class="line">Extracting partition [odm] .... [ok]</span><br><span class="line">cxxsheng@XXXXXXXX SAMFW.COM_SM-A217F_TGY_A217FZHSADWI1_fac % cd out </span><br><span class="line">cxxsheng@XXXXXXXX out % ls</span><br><span class="line">odm.img		product.img	system.img	vendor.img</span><br><span class="line">cxxsheng@XXXXXXXX out % ls -l</span><br><span class="line">total 10519552</span><br><span class="line">-rwx------  1 cxxsheng  staff     4349952 Sep 27 17:22 odm.img</span><br><span class="line">-rwx------  1 cxxsheng  staff  1065545728 Sep 27 17:22 product.img</span><br><span class="line">-rwx------  1 cxxsheng  staff  3826253824 Sep 27 17:22 system.img</span><br><span class="line">-rwx------  1 cxxsheng  staff   489086976 Sep 27 17:22 vendor.img</span><br></pre></td></tr></table></figure>
+
+<p>得到<code>system.img</code>，并且用<code>file</code>命令查看这个文件信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cxxsheng@XXXXXXXX out % file system.img </span><br><span class="line">system.img: Linux rev 1.0 ext2 filesystem data, UUID=5aceb523-09b9-551f-8359-437ee4e7f7e1 (extents) (large files) (huge files)</span><br><span class="line">cxxsheng@XXXXXXXX out % </span><br></pre></td></tr></table></figure>
+
+<p>可以看到是<code>ext2</code>的文件系统格式，这个系统可以直接用<code>7z</code>解压就行了，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">7z x system.img</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-F2FS文件系统"><a href="#3-F2FS文件系统" class="headerlink" title="3. F2FS文件系统"></a>3. F2FS文件系统</h3><p>有时候<code>file</code>命令查看文件信息是<code>F2FS</code>的文件系统如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cxxsheng@XXXXXXXX out % file system.img </span><br><span class="line">system.img: F2FS filesystem, UUID=2e533b9d-cbfe-4c0c-9726-3e45a77dc44a, volume name &quot;/&quot;</span><br><span class="line">cxxsheng@XXXXXXXX out % </span><br></pre></td></tr></table></figure>
+
+<p>这时候<code>7z</code>就不支持这个格式了，而Linux系统可以直接进行挂载，而Mac OS系统貌似并不支持这个文件格式。于是乎，我想到了是否可以Android模拟器进行<code>mount</code>来操作。</p>
+<p>首先使用<code>adb push</code>来把<code>system.img</code>压入到<code>/data/local/tmp</code>目录下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb push system.img /data/local/tmp</span><br></pre></td></tr></table></figure>
+
+<p>然后进入<code>shell</code>并且输入<code>su</code>来获取权限，并尝试用只读到方式挂载<code>system.img</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">emulator64_x86_64:/data/local/tmp # mount -ro loop system.img secure_directory/ </span><br><span class="line">mount: &#x27;/dev/block/loop29&#x27;-&gt;&#x27;secure_directory/&#x27;: I/O error</span><br></pre></td></tr></table></figure>
+
+<p>查看一下错误日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1|emulator64_x86_64:/data/local/tmp # dmesg | tail                                                           [ 3356.872222] type=1400 audit(1727430971.837:23): avc: denied &#123; read &#125; for comm=&quot;loop30&quot; path=&quot;/data/local/tmp/system.img&quot; dev=&quot;dm-5&quot; ino=65557 scontext=u:r:kernel:s0 tcontext=u:object_r:shell_data_file:s0 tclass=file permissive=0</span><br><span class="line">[ 3356.873810] Buffer I/O error on dev loop30, logical block 0, async page read</span><br><span class="line">[ 3356.879270] blk_update_request: I/O error, dev loop30, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0</span><br><span class="line">[ 3356.879500] type=1400 audit(1727430971.845:24): avc: denied &#123; read &#125; for comm=&quot;loop30&quot; path=&quot;/data/local/tmp/system.img&quot; dev=&quot;dm-5&quot; ino=65557 scontext=u:r:kernel:s0 tcontext=u:object_r:shell_data_file:s0 tclass=file permissive=0</span><br><span class="line">[ 3356.880869] Buffer I/O error on dev loop30, logical block 0, async page read</span><br><span class="line">[ 3356.885243] loop30: unable to read partition table</span><br><span class="line">[ 3356.885898] loop_reread_partitions: partition scan of loop30 () failed (rc=-5)</span><br><span class="line">[ 3356.948104] blk_update_request: I/O error, dev loop30, sector 2 op 0x0:(READ) flags 0x1000 phys_seg 1 prio class 0</span><br><span class="line">[ 3356.949082] type=1400 audit(1727430971.913:25): avc: denied &#123; read &#125; for comm=&quot;loop30&quot; path=&quot;/data/local/tmp/system.img&quot; dev=&quot;dm-5&quot; ino=65557 scontext=u:r:kernel:s0 tcontext=u:object_r:shell_data_file:s0 tclass=file permissive=0</span><br><span class="line">[ 3356.952802] EXT4-fs (loop30): unable to read superblock</span><br></pre></td></tr></table></figure>
+
+<p>仿佛是<code>Selinux</code>的问题，先将其关闭后重新挂载：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">emulator64_x86_64:/data/local/tmp # setenforce 0                                                              emulator64_x86_64:/data/local/tmp # mount -ro loop system.img secure_directory/                              </span><br><span class="line">emulator64_x86_64:/data/local/tmp # ls secure_directory/                                                     acct                carrier        dev                init.environ.rc  oem          product                 sys</span><br><span class="line">apex                config         dpolicy_system     linkerconfig     omr          sdcard                  system</span><br><span class="line">audit_filter_table  d              efs                metadata         optics       second_stage_resources  system_dlkm</span><br><span class="line">bin                 data           etc                mnt              postinstall  sepolicy_version        system_ext</span><br><span class="line">bugreports          data_mirror    init               odm              prism        spu                     vendor</span><br><span class="line">cache               debug_ramdisk  init.container.rc  odm_dlkm         proc         storage                 vendor_dlkm</span><br><span class="line">emulator64_x86_64:/data/local/tmp # </span><br></pre></td></tr></table></figure>
+
+<p>可以看到已经成功了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/09/13/Frida%E7%9A%84%E4%B8%80%E4%BA%9B%E8%84%9A%E6%9C%AC/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2024-09-27 18:05:04
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Android/" title="Android">
+                        #Android
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Firmware/" title="Firmware">
+                        #Firmware
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%A7%A3%E5%8E%8B"><span class="toc-text">1. 解压</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%A3%E5%8C%85super-img"><span class="toc-text">2. 解包super.img</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-F2FS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">3. F2FS文件系统</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2024 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E8%A7%A3%E5%8C%85%E4%B8%89%E6%98%9F%E5%88%B7%E6%9C%BA%E5%8C%85%E4%B8%AD%E7%9A%84system.img%EF%BC%88Mac%20OS%E7%89%88%E6%9C%AC%EF%BC%89 + '&url=' + http%3A%2F%2Fexample.com%2F2024%2F09%2F27%2F%25E8%25A7%25A3%25E5%258C%2585%25E4%25B8%2589%25E6%2598%259F%25E5%2588%25B7%25E6%259C%25BA%25E5%258C%2585%25E4%25B8%25AD%25E7%259A%2584system-img%25EF%25BC%2588Mac-OS%25E7%2589%2588%25E6%259C%25AC%25EF%25BC%2589%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2024/09/27/%E8%A7%A3%E5%8C%85%E4%B8%89%E6%98%9F%E5%88%B7%E6%9C%BA%E5%8C%85%E4%B8%AD%E7%9A%84system-img%EF%BC%88Mac-OS%E7%89%88%E6%9C%AC%EF%BC%89/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
