@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      一次Selinux的实验（非常主观） 
+      
+      
+      |
+    
+     Cxxsheng的博客
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Cxxsheng</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">一次Selinux的实验（非常主观）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2024-10-05 17:01:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Android/" title="Android">
+                    #Android
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Selinux/" title="Selinux">
+                    #Selinux
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>最近做培训的相关的工作，在讲解Selinux相关工作的时候，一名学员提出来一个问题，即然Selinux能够在进程在获取Root权限后，依旧对其有所限制，那么是否可以通过Selinux的policy来阻止Root进程来删除某个特定文件？我的回答是当然可以，那么具体怎么做呢？</p>
+<h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><p>开始，需要找一台支持Selinux的设备，我尝试在Ubuntu上安装Selinux模块，于是乎Ubuntu就无法启动了（还好是ESXI的虚拟机）。于是乎，我想到了是否能用Android来做这次实验，毕竟Android原生就支持Selinux。但是Android上没有自带的管理Selinux Policy的相关工具，而刷机有比较麻烦，于是乎我把目光引向了Magisk和magiskpolicy工具。在手机上安装Magisk成功后，自然而然就存在magiskpolicy这个工具了。本平台使用的是OnePlus 7T + Lineage OS 21 + Magisk的组合，刷机过程不作赘述。</p>
+<h3 id="实验开始"><a href="#实验开始" class="headerlink" title="实验开始"></a>实验开始</h3><p>在Gpt的加持下写代码一把梭，很快写出了以下规则：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># myprotect.rule                                                                           type protected_software</span><br><span class="line">typeattribute protected_software file_type</span><br></pre></td></tr></table></figure>
+
+<p>这里定义了一个新的SELinux类型，名为 <code>protected_software</code>，并将 <code>protected_software</code> 类型添加到 <code>file_type</code> 属性中。</p>
+<p>然后，应用这个规则，并给文件应用了刚刚创建的安全上下文：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # magiskpolicy --live --apply myprotect.rule   </span><br><span class="line">OnePlus7T:/data/local/tmp # chcon u:object_r:protected_software:s0 new_file                </span><br></pre></td></tr></table></figure>
+
+<p>在用ls检查一下，可以发现已经成功了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # ls -Z new_file                                                 u:object_r:protected_software:s0 new_file</span><br></pre></td></tr></table></figure>
+
+<p>由于上述规则中并没有任何对该文件的权限，如果尝试删除这个文件会引来报错。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # rm new_file</span><br></pre></td></tr></table></figure>
+
+<p>但是被打脸了，可以成功删除，我继续查看id，发现当前的context为magisk：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root) context=u:r:magisk:s0</span><br></pre></td></tr></table></figure>
+
+<p>看来magisk这个context是具有特权的，在询问了开发Magisk工具的师傅后，他告诉我<strong>Magisk的su几乎是完全不受Selinux限制</strong>，因为它给了几乎所有权限，同时还是permissive域，permissive域执行所有操作都会放行，但是如果没明确的 allow 规则 avc 日志里还会叫一声，具体可以查看<a target="_blank" rel="noopener" href="https://github.com/topjohnwu/Magisk/blob/master/native/src/sepolicy/rules.rs#L81">Magisk代码</a>，可以通过以下代码看到Magisk的所有allow规则。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">magiskpolicy --print-rules | grep magisk      </span><br></pre></td></tr></table></figure>
+
+<p>那看来是需要给自己进程重新降级了？</p>
+<p>本来我想着重新创建一个进程的selinux上下文，但是权限问题报的很多，而给了所有权限又没法测试本文的主旨了。因此我使用了现有的shell上下文。通过以下命令，就可以进入一个新的上下文的shell，同时还具有root权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # runcon u:r:shell:s0 /system/bin/sh</span><br><span class="line">OnePlus7T:/data/local/tmp # id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root) context=u:r:shell:s0</span><br></pre></td></tr></table></figure>
+
+<p>但是又又又遇到问题了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # ls</span><br><span class="line">ls: .: Permission denied</span><br></pre></td></tr></table></figure>
+
+<p>奇了怪了，竟然对自己拥有的文件夹也不具有权限了？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp $ id</span><br><span class="line">uid=2000(shell) gid=2000(shell) groups=2000(shell),1004(input),1007(log),1011(adb),1015(sdcard_rw),1028(sdcard_r),1078(ext_data_rw),1079(ext_obb_rw),3001(net_bt_admin),3002(net_bt),3003(inet),3006(net_bw_stats),3009(readproc),3011(uhid),3012(readtracefs) context=u:r:shell:s0</span><br><span class="line">OnePlus7T:/data/local/tmp $ ls -alZ                                                       total 12</span><br><span class="line">drwxrwx--x 2 shell shell u:object_r:shell_data_file:s0     4096 2024-09-28 03:43 .</span><br><span class="line">drwxr-x--x 5 root  root  u:object_r:system_data_file:s0    4096 1970-02-05 03:11 ..</span><br><span class="line">-rw-r--r-- 1 root  root  u:object_r:protected_software:s0     0 2024-09-28 19:14 aaa</span><br><span class="line">-rw-r--r-- 1 root  root  u:object_r:shell_data_file:s0       67 2024-09-28 19:29 myprotect.rule</span><br></pre></td></tr></table></figure>
+
+<p>而没有root权限context的反而对改文件夹具有权限？</p>
+<p>我查看了一样selinux的日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # dmesg | grep avc   </span><br><span class="line">...</span><br><span class="line">[ 1212.072580] type=1400 audit(1727466888.567:51): avc:  denied  &#123; dac_read_search &#125; for  comm=&quot;ls&quot; capability=2  scontext=u:r:shell:s0 tcontext=u:r:shell:s0 tclass=capability permissive=0</span><br><span class="line">[ 1212.072832] type=1400 audit(1727466888.571:52): avc:  denied  &#123; dac_override &#125; for  comm=&quot;ls&quot; capability=1  scontext=u:r:shell:s0 tcontext=u:r:shell:s0 tclass=capability permissive=0</span><br></pre></td></tr></table></figure>
+
+<p>发现了上述两条报错，可以看到因为<code>dac_override</code>和<code>dac_read_search</code>的原因拒绝了<code>ls</code>的操作。</p>
+<p>经过检索发现：</p>
+<blockquote>
+<p>dac_override 拒绝事件意味着违规进程正在尝试使用错误的 unix user&#x2F;group&#x2F;world 权限访问某个文件。正确的解决方案几乎从不授予 dac_override 权限，而是更改相应文件或进程的 unix 权限。有些域（例如init、vold 和 installd）确实需要能够替换 unix 文件权限才能访问其他进程的文件。要查看更深入的讲解，请访问 <a target="_blank" rel="noopener" href="https://danwalsh.livejournal.com/69478.html">Dan Walsh</a> 的博客</p>
+</blockquote>
+<p>具体可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/Donald_Zhuang/article/details/108786482">这篇文章</a>，大概明白了，进程使用错误的权限&#x2F;权限组，会报这个错误。</p>
+<p>知道原因，找到解决方法就不难了，在magisk域下使用以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">magiskpolicy --live &quot;allow shell shell capability &#123; dac_override &#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>之后可以看到<code>ls</code>可以正常使用了。</p>
+<h3 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h3><p>解决掉上述一系列的问题，可以正式开始我们的的实验了。</p>
+<ol>
+<li><p>创建规则并且应用规则</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">magiskpolicy --live --apply myprotect.rule</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建文件并赋予文件新的上下文</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch new_file &amp;&amp; chcon u:object_r:protected_software:s0 new_file</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>给shell赋予<code>dac_override</code>的权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">magiskpolicy --live &quot;allow shell shell capability &#123; dac_override &#125;&quot;          </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入shell的context</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">runcon u:r:shell:s0 /system/bin/sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>尝试删除文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OnePlus7T:/data/local/tmp # rm new_file                                               rm ro new_file (y/N):y</span><br><span class="line">rm: new_file: Permission denied</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看日志验证Selinux拦截了相关操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ 1921.167160] type=1400 audit(1727467597.663:72): avc:  denied  &#123; unlink &#125; for  comm=&quot;rm&quot; name=&quot;new_file&quot; dev=&quot;dm-44&quot; ino=4046859 scontext=u:r:shell:s0 tcontext=u:object_r:protected_software:s0 tclass=file permissive=0</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>至此，整个Selinux实验结束。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/09/27/%E8%A7%A3%E5%8C%85%E4%B8%89%E6%98%9F%E5%88%B7%E6%9C%BA%E5%8C%85%E4%B8%AD%E7%9A%84system-img%EF%BC%88Mac-OS%E7%89%88%E6%9C%AC%EF%BC%89/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2024-10-05 17:01:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Android/" title="Android">
+                        #Android
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Selinux/" title="Selinux">
+                        #Selinux
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-text">实验环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%BC%80%E5%A7%8B"><span class="toc-text">实验开始</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%BF%87%E7%A8%8B"><span class="toc-text">实验过程</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2024 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%B8%80%E6%AC%A1Selinux%E7%9A%84%E5%AE%9E%E9%AA%8C%EF%BC%88%E9%9D%9E%E5%B8%B8%E4%B8%BB%E8%A7%82%EF%BC%89 + '&url=' + http%3A%2F%2Fexample.com%2F2024%2F10%2F02%2FSelinux%25E7%259A%2584%25E5%25B0%258F%25E5%25AE%259E%25E9%25AA%258C%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2024/10/02/Selinux%E7%9A%84%E5%B0%8F%E5%AE%9E%E9%AA%8C/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
